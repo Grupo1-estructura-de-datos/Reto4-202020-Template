@@ -23,11 +23,14 @@
  * Dario Correal
  *
  """
-
+import sys
+import os
 import config as cf
+assert cf
 from App import model
 import csv
 from DISClib.ADT import queue as qe
+
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -54,11 +57,11 @@ def init():
 #  de datos en los modelos
 # ___________________________________________________
 
-def loadTrips(citibike,nombres):
-    for n in nombres:
-        if n.endswith('.csv'):
-            print('Cargando archivo: ' + n)
-            loadServices(citibike, n)
+def loadTrips(citibike):
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadServices(citibike, filename)
     return citibike
 
 def loadServices(citibike, tripfile):

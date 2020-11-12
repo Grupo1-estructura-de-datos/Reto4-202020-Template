@@ -44,7 +44,6 @@ operación seleccionada.
 # ___________________________________________________
 
 recursionLimit = 20000
-nombres_de_archivos = ["201801-1-citibike-tripdata.csv","201801-2-citibike-tripdata.csv"]
 
 # ___________________________________________________
 #  Funciones para imprimir la inforamación de
@@ -91,7 +90,7 @@ def optionOne():
 
 def optionTwo():
     print("\nCargando información de bicicletas en NY ....")
-    controller.loadTrips(cont, nombres_de_archivos)
+    controller.loadTrips(cont)
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
     print('Numero de vertices: ' + str(numvertex))
