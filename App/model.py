@@ -30,7 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.DataStructures import listiterator as it
 from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
-from DISClib.Utils import error as error
+from DISClib.Utils import error 
 assert config
 
 """
@@ -42,11 +42,82 @@ de creacion y consulta sobre las estructuras de datos.
 #                       API
 # -----------------------------------------------------
 
+def newAnalyzer():
+    """ Inicializa el analizador
+
+   stops: Tabla de hash para guardar los vertices del grafo
+   connections: Grafo para representar las rutas entre estaciones
+   components: Almacena la informacion de los componentes conectados
+   paths: Estructura que almancena los caminos de costo minimo desde un
+           vertice determinado a todos los otros vértices del grafo
+    """
+    try:
+        analyzer = {
+                    'graph': None,
+                    }
+
+        analyzer['graph'] = gr.newGraph(datastructure='ADJ_LIST',
+                                              directed=True,
+                                              size=1000,
+                                              comparefunction=compareStations)
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:newAnalyzer')
+
+# ===========================================
 # Funciones para agregar informacion al grafo
+# ===========================================
+
+def addTrip(citibike, trip):
+    """
+    """
+    origin = trip['start station id']
+    destination = trip['end station id']
+    duration = int(trip['tripduration'])
+    addStation(citibike, origin)
+    addStation(citibike, destination)
+    addConnection(citibike, origin, destination, duration)
+
+def addStation(citibike, stationid):
+    """
+    Adiciona una estación como un vertice del grafo
+    """
+    if not gr.containsVertex(citibike["graph"], stationid):
+            gr.insertVertex(citibike["graph"], stationid)
+    return citibike
+
+def addConnection(citibike, origin, destination, duration):
+    """
+    Adiciona un arco entre dos estaciones
+    """
+    edge = gr.getEdge(citibike["graph"], origin, destination)
+    if edge is None:
+        gr.addEdge(citibike["graph"], origin, destination, duration)
+    return citibike
 
 # ==============================
 # Funciones de consulta
 # ==============================
+
+def totalStops(analyzer):
+    """
+    Retorna el total de estaciones (vertices) del grafo
+    """
+    return gr.numVertices(analyzer['graph'])
+
+def totalConnections(analyzer):
+    """
+    Retorna el total arcos del grafo
+    """
+    return gr.numEdges(analyzer['graph'])
+
+def numSCC(graph):
+    sc = scc.KosarajuSCC(graph["graph"])
+    return scc.connectedComponents(sc)
+
+def sameCC(graph, station1, station2):
+    sc = scc.KosarajuSCC(graph["graph"])
+    return scc.stronglyConnected(sc, station1, station2)
 
 # ==============================
 # Funciones Helper
@@ -55,3 +126,15 @@ de creacion y consulta sobre las estructuras de datos.
 # ==============================
 # Funciones de Comparacion
 # ==============================
+
+def compareStations(stop, keyvaluestop):
+    """
+    Compara dos estaciones
+    """
+    stopcode = keyvaluestop['key']
+    if (stop == stopcode):
+        return 0
+    elif (stop > stopcode):
+        return 1
+    else:
+        return -1

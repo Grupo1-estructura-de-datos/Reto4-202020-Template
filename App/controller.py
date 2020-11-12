@@ -23,10 +23,14 @@
  * Dario Correal
  *
  """
-
+import sys
+import os
 import config as cf
+assert cf
 from App import model
 import csv
+from DISClib.ADT import queue as qe
+
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -40,12 +44,57 @@ recae sobre el controlador.
 #  Inicializacion del catalogo
 # ___________________________________________________
 
+def init():
+    """
+    Llama la funcion de inicializacion  del modelo.
+    """
+    # analyzer es utilizado para interactuar con el modelo
+    analyzer = model.newAnalyzer()
+    return analyzer
 
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
 
+def loadTrips(citibike):
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadServices(citibike, filename)
+    return citibike
+
+def loadServices(citibike, tripfile):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    for trip in input_file:
+        model.addTrip(citibike, trip)
+    return citibike
+
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+
+def totalStops(analyzer):
+    """
+    Total de paradas de autobus
+    """
+    return model.totalStops(analyzer)
+
+
+def totalConnections(analyzer):
+    """
+    Total de enlaces entre las paradas
+    """
+    return model.totalConnections(analyzer)
+
+
+def f3(analyzer,s1,s2):
+    cola = qe.newQueue()
+    qe.enqueue(cola, "Hay " + str(model.numSCC(analyzer)) + " clústeres en el grafo")
+    if model.sameCC(analyzer,s1,s2)==False:
+        qe.enqueue(cola, "Las dos estaciones NO pertenecen al mismo clúster")
+    else:
+        qe.enqueue(cola, "Las dos estaciones SI pertenecen al mismo clúster")
+    return cola
