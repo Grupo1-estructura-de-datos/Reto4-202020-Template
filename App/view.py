@@ -60,7 +60,7 @@ def ImprimirEnConsola(cola, DatosAdicionales=None):
             print("•" + qe.dequeue(cola))
             if qe.isEmpty(cola)==True: Centinela=False
         print("-"*100)
-    else: print("No se encontrar peliculas para el criterio")
+    else: print("No se ha encontrado información para el criterio")
     if DatosAdicionales!=None:
         if qe.isEmpty(DatosAdicionales)==False:
             CentinelaAdicionales = True
@@ -81,6 +81,12 @@ def printMenu():
     print("1- Crear estructuras de datos")
     print("2- Cargar información de bicicletas en NY")
     print("3- Cantidad de clústeres de viajes (REQ1)")
+    print("4- Ruta turística Circular (REQ2)")
+    print("5- Estaciones críticas (REQ3)")
+    print("6- Ruta turística por resistencia (REQ4)")
+    print("7- Recomendador de Rutas (REQ5)")
+    print("8- Ruta de interés turístico (REQ6)")
+    print("9- Identificación de Estaciones para Publicidad (REQ7)")
     print("*******************************************")
 
 def optionOne():
@@ -90,6 +96,7 @@ def optionOne():
 
 def optionTwo():
     print("\nCargando información de bicicletas en NY ....")
+    sys.setrecursionlimit(recursionLimit)
     controller.loadTrips(cont)
     numedges = controller.totalConnections(cont)
     numvertex = controller.totalStops(cont)
@@ -100,34 +107,93 @@ def optionTwo():
 
 def optionThree():
     print("\nCargando información clústeres de viajes")
-    controller.f3(cont,s1,s2)
     ImprimirEnConsola(controller.f3(cont,s1,s2))
+
+def optionFour():
+    print("\nCargando información rutas circulares")
+    ImprimirEnConsola(controller.f4(cont,si,tMIN,tMAX))
+
+def optionFive():
+    print("\nCargando estaciones críticas")
+    ImprimirEnConsola(controller.f5(cont))
+
+def optionSix():
+    print("\nCargando ruta turística por resistencia")
+    ImprimirEnConsola(controller.f6(cont,s1,tMAX))
+
+def optionSeven():
+    print("\nCargando recomendador de rutas")
+    ImprimirEnConsola(controller.f7(cont,edad))
+
+def optionEight():
+    print("\nCargando ruta de interés turístico ")
+    ImprimirEnConsola(controller.f8(cont,lat1,lon1,lat2,lon2))
+
+def optionNine():
+    print("\nCargando identificador de Estaciones para Publicidad ")
+    ImprimirEnConsola(controller.f9(cont,edad))
 
 """
 Menu principal
 """
 while True:
-    try:
-        printMenu()
-        inputs = input('Seleccione una opción para continuar\n>')
+    #try:
+    printMenu()
+    inputs = input('Seleccione una opción para continuar\n>')
 
-        if int(inputs) == 0:
-            print("\nHasta pronto!")
-            break
+    if int(inputs) == 0:
+        print("\nHasta pronto!")
+        break
 
-        if int(inputs) == 1:
-            executiontime = timeit.timeit(optionOne, number=1)
-            print("Tiempo de ejecución: " + str(executiontime)+ " segundos")
+    if int(inputs) == 1:
+        executiontime = timeit.timeit(optionOne, number=1)
+        print("Tiempo de ejecución: " + str(executiontime)+ " segundos")
 
-        elif int(inputs) == 2:
-            executiontime = timeit.timeit(optionTwo, number=1)
-            print("Tiempo de ejecución: " + str(executiontime)+ " segundos")
+    elif int(inputs) == 2:
+        executiontime = timeit.timeit(optionTwo, number=1)
+        print("Tiempo de ejecución: " + str(executiontime)+ " segundos")
 
-        elif int(inputs) == 3:
-            s1 = input("Por favor ingrese el identificador de la estación 1: ")
-            s2 = input("Por favor ingrese el identificador de la estación 2: ")
-            executiontime = timeit.timeit(optionThree, number=1)
-            print("Tiempo de ejecución: " + str(executiontime) + " segundos")
-    except:
-        print("\nAlgo ocurrió mal, asegurese que todo esté bien e intente nuevamente: ")
+    elif int(inputs) == 3:
+        s1 = input("Por favor ingrese el identificador de la estación 1: ")
+        s2 = input("Por favor ingrese el identificador de la estación 2: ")
+        executiontime = timeit.timeit(optionThree, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")
+
+    elif int(inputs) == 4:
+        si = input("Por favor ingrese el identificador de la estación de inicio: ")
+        tMIN = int(input("Por favor ingrese el tiempo mínimo disponible (en minutos): "))
+        tMAX = int(input("Por favor ingrese el tiempo máximo disponible (en minutos): "))
+        executiontime = timeit.timeit(optionFour, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")
+
+    elif int(inputs) == 5:
+        executiontime = timeit.timeit(optionFive, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")
+    
+    elif int(inputs) == 6:
+        s1 = input("Por favor ingrese el identificador de la estación de inicio: ")
+        tMAX = int(input("Por favor ingrese el tiempo máximo de resistencia disponible (en minutos): "))
+        executiontime = timeit.timeit(optionSix, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")  
+    
+    elif int(inputs) == 7:
+        edad = int(input("Por favor ingrese la edad del turista: "))
+        executiontime = timeit.timeit(optionSeven, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")  
+
+    elif int(inputs) == 8:
+        lat1 = float(input("Por favor ingrese la latitud de su ubicación actual: "))
+        lon1 = float(input("Por favor ingrese la longitud de su ubicación actual: "))
+        lat2 = float(input("Por favor ingrese la latitud del sitio turístico al que quiere viajar: "))
+        lon2 = float(input("Por favor ingrese la longitud del sitio turístico al que quiere viajar: "))
+        executiontime = timeit.timeit(optionEight, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")
+
+    elif int(inputs) == 9:
+        edad = int(input("Por favor ingrese la edad del turista: "))
+        executiontime = timeit.timeit(optionNine, number=1)
+        print("Tiempo de ejecución: " + str(executiontime) + " segundos")
+
+    #except:
+     #   print("\nAlgo ocurrió mal, asegurese que todo esté bien e intente nuevamente: ")
 sys.exit(0)
